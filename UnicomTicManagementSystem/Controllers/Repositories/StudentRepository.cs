@@ -122,8 +122,9 @@ namespace UnicomTicManagementSystem.Controllers.Repositories
             {
                 var sql = $@"
                     SELECT s.Id, s.Name, s.Address, s.SectionId, s.SectionName, s.Stream,
-                           s.ReferenceId, s.UserId, s.LastAttendanceDate, s.IsActive
-                    FROM {TableName} s
+                           s.ReferenceId, s.UserId, s.LastAttendanceDate, s.IsActive,
+                           u.Username, u.Password
+                    FROM Students s
                     INNER JOIN Users u ON s.UserId = u.Id
                     WHERE u.Username = @Username";
 
@@ -133,7 +134,10 @@ namespace UnicomTicManagementSystem.Controllers.Repositories
                 {
                     if (reader.Read())
                     {
-                        return MapReaderToStudent(reader);
+                        var student = MapReaderToStudent(reader);
+                        student.Username = reader["Username"].ToString();
+                        student.Password = reader["Password"].ToString();
+                        return student;
                     }
                 }
                 return null;
@@ -185,31 +189,37 @@ namespace UnicomTicManagementSystem.Controllers.Repositories
             return await Task.Run(() =>
             {
                 var timetables = new List<TimeTable>();
+
                 var sql = @"
-                    SELECT tt.*
-                    FROM TimeTable tt
-                    INNER JOIN Subjects s ON tt.Subject = s.SubjectName
-                    INNER JOIN Sections sec ON s.SectionId = sec.Id
-                    WHERE sec.Name = @SectionName
-                    ORDER BY tt.Date, tt.TimeSlot";
+            SELECT tt.Subject, tt.TimeSlot, tt.Room, tt.Date
+            FROM Timetable tt
+            INNER JOIN Subjects s ON tt.Subject = s.SubjectName
+            INNER JOIN Sections sec ON s.SectionId = sec.Id
+            WHERE sec.Name = @SectionName
+            ORDER BY tt.Date, tt.TimeSlot";
+
                 var parameters = new Dictionary<string, object> { { "@SectionName", sectionName } };
 
                 using (var reader = ExecuteReader(sql, parameters))
                 {
                     while (reader.Read())
                     {
-                        var timeTable = TimeTable.CreateTimeTable(
+                        timetables.Add(TimeTable.CreateTimeTable(
                             reader["Subject"].ToString(),
                             reader["TimeSlot"].ToString(),
                             reader["Room"].ToString(),
                             DateTime.Parse(reader["Date"].ToString())
-                        );
-                        timetables.Add(timeTable);
+                        ));
                     }
                 }
+
                 return timetables;
             });
         }
+
+
+
+
 
         public async Task<List<Mark>> GetExamMarksByUsernameAsync(string username)
         {
@@ -217,14 +227,13 @@ namespace UnicomTicManagementSystem.Controllers.Repositories
             {
                 var marks = new List<Mark>();
                 var sql = @"
-            SELECT m.*, e.ExamName AS ExamName, s.SubjectName AS SubjectName
+            SELECT m.StudentId, m.Subject, m.Exam, m.Score
             FROM Marks m
-            INNER JOIN ManageExam e ON m.Exam = e.Id
-            INNER JOIN Subjects s ON e.SubjectId = s.Id
             INNER JOIN Students st ON m.StudentId = st.Id
             INNER JOIN Users u ON st.UserId = u.Id
             WHERE u.Username = @Username
-            ORDER BY e.CreatedDate DESC";
+            ORDER BY m.CreatedDate DESC";
+
                 var parameters = new Dictionary<string, object> { { "@Username", username } };
 
                 using (var reader = ExecuteReader(sql, parameters))
@@ -233,16 +242,18 @@ namespace UnicomTicManagementSystem.Controllers.Repositories
                     {
                         var mark = Mark.CreateMark(
                             Guid.Parse(reader["StudentId"].ToString()),
-                            reader["SubjectName"].ToString(),
-                            reader["ExamName"].ToString(),
+                            reader["Subject"].ToString(),
+                            reader["Exam"].ToString(),
                             Convert.ToInt32(reader["Score"])
                         );
                         marks.Add(mark);
                     }
                 }
+
                 return marks;
             });
         }
+
 
         public async Task<List<Attendance>> GetAttendanceByUsernameAsync(string username)
         {

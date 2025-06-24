@@ -12,6 +12,7 @@ namespace UnicomTicManagementSystem.Views
         private string username;
         private Student student;
         private StudentRepository _studentRepository;
+        private string sectionName;
 
         public StudentDashboard(string username)
         {
@@ -32,11 +33,6 @@ namespace UnicomTicManagementSystem.Views
                 lblUsername.Text = username;
                 lblPassword.Text = student.Password;
                 lblAddress.Text = student.Address;
-                lblStream.Text = student.SectionName;
-
-                // ✅ Get subject list and display
-                var subjectList = await _studentRepository.GetSubjectsBySectionNameAsync(student.SectionName);
-                lblSubject.Text = string.Join(", ", subjectList);
             }
             else
             {
@@ -48,7 +44,7 @@ namespace UnicomTicManagementSystem.Views
         {
             if (student != null)
             {
-                dataGridView1.DataSource = await _studentRepository.GetTimetableBySectionAsync(student.SectionName);
+                dataGridView1.DataSource = await _studentRepository.GetTimetableBySectionAsync(sectionName);
             }
         }
 
@@ -71,16 +67,6 @@ namespace UnicomTicManagementSystem.Views
                 loginForm.Show();
             }
         }
-
-        private void lblName_Click(object sender, EventArgs e) { }
-
-        private void lblStream_Click(object sender, EventArgs e) { }
-
-        //private void btnResetPassword_Click(object sender, EventArgs e)
-        //{
-        //    var resetForm = new ResetPasswordForm(username);
-        //    resetForm.ShowDialog();
-        //}
 
         private async void btnViewAttendance_Click(object sender, EventArgs e)
         {

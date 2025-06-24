@@ -9,7 +9,8 @@ namespace UnicomTicManagementSystem.Views
     public partial class MarkForm : Form
     {
         private MarkController controller = new MarkController();
-        private int selectedMarkId = -1;
+        private Guid selectedMarkId = Guid.Empty;
+        private Guid studentGuidId = Guid.Empty;
         private string userRole;
 
         public MarkForm(string role = "Lecture")
@@ -29,17 +30,20 @@ namespace UnicomTicManagementSystem.Views
         {
             comboExam.Items.Clear();
             var dt = await controller.GetExamsAsync();
+
+            MessageBox.Show($"Total Exams Loaded: {dt.Rows.Count}");
+
             foreach (DataRow row in dt.Rows)
             {
-                comboExam.Items.Add(row["ExamName"].ToString());
+                comboExam.Items.Add(row["Exam"].ToString());
             }
         }
+
 
         private void ApplyRolePermissions()
         {
             if (userRole == "admin")
             {
-                // Hide input controls and buttons
                 txtScore.Visible = false;
                 comboExam.Visible = false;
                 comboSubject.Visible = false;
@@ -49,7 +53,6 @@ namespace UnicomTicManagementSystem.Views
                 btnUpdate.Visible = false;
                 btnDelete.Visible = false;
 
-                // Hide labels
                 label1.Visible = false;
                 label2.Visible = false;
                 label3.Visible = false;
@@ -57,7 +60,6 @@ namespace UnicomTicManagementSystem.Views
                 label5.Visible = false;
                 label6.Visible = false;
 
-                // Expand DataGridView
                 dataGridView1.Dock = DockStyle.Fill;
                 dataGridView1.ReadOnly = true;
                 dataGridView1.ClearSelection();
@@ -66,10 +68,11 @@ namespace UnicomTicManagementSystem.Views
             }
         }
 
-        private async Task LoadSubjectsAsync(int studentId)
+        // New overload for loading subjects by Guid
+        private async Task LoadSubjectsAsync(Guid studentGuid)
         {
             comboSubject.Items.Clear();
-            var dt = await controller.GetSubjectsByStudentAsync(studentId);
+            var dt = await controller.GetSubjectsByStudentAsync(studentGuid);
             foreach (DataRow row in dt.Rows)
             {
                 comboSubject.Items.Add(row["SubjectName"].ToString());
@@ -83,10 +86,20 @@ namespace UnicomTicManagementSystem.Views
 
         private async void txtStudentID_TextChanged(object sender, EventArgs e)
         {
-            if (int.TryParse(txtStudentID.Text, out int studentId))
+            if (int.TryParse(txtStudentID.Text, out int referenceId))
             {
-                txtStudentName.Text = await controller.GetStudentNameAsync(studentId);
-                await LoadSubjectsAsync(studentId);
+                var (guidId, name) = await controller.GetStudentByReferenceIdAsync(referenceId);
+                if (guidId != Guid.Empty)
+                {
+                    studentGuidId = guidId;
+                    txtStudentName.Text = name;
+                    await LoadSubjectsAsync(guidId);
+                }
+                else
+                {
+                    txtStudentName.Text = "Not Found";
+                    comboSubject.Items.Clear();
+                }
             }
         }
 
@@ -97,11 +110,11 @@ namespace UnicomTicManagementSystem.Views
             if (e.RowIndex >= 0)
             {
                 DataGridViewRow row = dataGridView1.Rows[e.RowIndex];
-                selectedMarkId = Convert.ToInt32(row.Cells["MarkID"].Value);
-                txtStudentID.Text = row.Cells["StudentID"].Value.ToString();
-                comboSubject.SelectedItem = row.Cells["Subject"].Value.ToString();
-                comboExam.SelectedItem = row.Cells["Exam"].Value.ToString();
-                txtScore.Text = row.Cells["Score"].Value.ToString();
+                selectedMarkId = Guid.TryParse(row.Cells["MarkID"].Value?.ToString(), out Guid markGuid) ? markGuid : Guid.Empty;
+                txtStudentID.Text = row.Cells["StudentID"].Value?.ToString();
+                comboSubject.SelectedItem = row.Cells["Subject"].Value?.ToString();
+                comboExam.SelectedItem = row.Cells["Exam"].Value?.ToString();
+                txtScore.Text = row.Cells["Score"].Value?.ToString();
             }
         }
 
@@ -112,12 +125,13 @@ namespace UnicomTicManagementSystem.Views
             comboSubject.SelectedIndex = -1;
             comboExam.SelectedIndex = -1;
             txtScore.Clear();
-            selectedMarkId = -1;
+            selectedMarkId = Guid.Empty;
+            studentGuidId = Guid.Empty;
         }
 
         private async void btnDelete_Click_1(object sender, EventArgs e)
         {
-            if (selectedMarkId == -1)
+            if (selectedMarkId == Guid.Empty)
             {
                 MessageBox.Show("Select a row to delete.");
                 return;
@@ -131,19 +145,19 @@ namespace UnicomTicManagementSystem.Views
 
         private async void btnUpdate_Click_1(object sender, EventArgs e)
         {
-            if (selectedMarkId == -1)
+            if (selectedMarkId == Guid.Empty || studentGuidId == Guid.Empty)
             {
-                MessageBox.Show("Select a row to update.");
+                MessageBox.Show("Select a row and enter a valid student.");
                 return;
             }
 
-            if (!int.TryParse(txtStudentID.Text, out int studentId) || !int.TryParse(txtScore.Text, out int score))
+            if (!int.TryParse(txtScore.Text, out int score))
             {
-                MessageBox.Show("Invalid Student ID or Score.");
+                MessageBox.Show("Invalid Score.");
                 return;
             }
 
-            await controller.UpdateMarkAsync(selectedMarkId, studentId, comboSubject.SelectedItem.ToString(), comboExam.SelectedItem.ToString(), score);
+            await controller.UpdateMarkAsync(selectedMarkId, studentGuidId, comboSubject.SelectedItem.ToString(), comboExam.SelectedItem.ToString(), score);
             MessageBox.Show("Updated.");
             await LoadMarksAsync();
             ClearForm();
@@ -151,13 +165,13 @@ namespace UnicomTicManagementSystem.Views
 
         private async void btnAdd_Click_1(object sender, EventArgs e)
         {
-            if (!int.TryParse(txtStudentID.Text, out int studentId) || comboSubject.SelectedItem == null || comboExam.SelectedItem == null || !int.TryParse(txtScore.Text, out int score))
+            if (studentGuidId == Guid.Empty || comboSubject.SelectedItem == null || comboExam.SelectedItem == null || !int.TryParse(txtScore.Text, out int score))
             {
                 MessageBox.Show("Please complete all fields.");
                 return;
             }
 
-            await controller.AddMarkAsync(studentId, comboSubject.SelectedItem.ToString(), comboExam.SelectedItem.ToString(), score);
+            await controller.AddMarkAsync(studentGuidId, comboSubject.SelectedItem.ToString(), comboExam.SelectedItem.ToString(), score);
             MessageBox.Show("Mark added.");
             await LoadMarksAsync();
             ClearForm();
