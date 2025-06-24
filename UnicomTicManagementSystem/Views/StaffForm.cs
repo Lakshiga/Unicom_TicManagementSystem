@@ -89,15 +89,28 @@ namespace UnicomTicManagementSystem.Views
                 return;
             }
 
-            Guid staffId = new Guid(selectedStaffId.ToString()); // Ensure selectedStaffId is a valid Guid
+            try
+            {
+                var addr = new System.Net.Mail.MailAddress(txtEmail.Text);
+                if (addr.Address != txtEmail.Text)
+                {
+                    MessageBox.Show("Please enter a valid email address.");
+                    return;
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Please enter a valid email address.");
+                return;
+            }
 
             var staff = new Staff
             {
-                Id = staffId,
+                Id = selectedStaffId,
                 Name = txtName.Text,
                 Address = txtAddress.Text,
                 Email = txtEmail.Text,
-                UserId = new Guid(selectedUserId.ToString()) // Convert selectedUserId to Guid
+                UserId = selectedUserId
             };
 
             await _staffController.UpdateStaffAsync(staff, txtUsername.Text.Trim(), textBox5.Text.Trim());
@@ -105,6 +118,7 @@ namespace UnicomTicManagementSystem.Views
             ClearForm();
             MessageBox.Show("Staff updated successfully.");
         }
+
 
         private async void btnAdd_Click_1(object sender, EventArgs e)
         {
@@ -115,18 +129,32 @@ namespace UnicomTicManagementSystem.Views
                 return;
             }
 
+            try
+            {
+                var addr = new System.Net.Mail.MailAddress(txtEmail.Text);
+                if (addr.Address != txtEmail.Text)
+                {
+                    MessageBox.Show("Please enter a valid email address.");
+                    return;
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Please enter a valid email address.");
+                return;
+            }
+
             if (await UserRepository.UserExistsAsync(txtUsername.Text))
             {
                 MessageBox.Show("Username already exists.");
                 return;
             }
 
-            // Pass a valid Guid as the fourth argument
             var staff = Staff.CreateStaff(
                 txtName.Text,
                 txtAddress.Text,
                 txtEmail.Text,
-                Guid.NewGuid() // Generate a new Guid for the UserId
+                Guid.NewGuid()
             );
 
             await _staffController.AddStaffAsync(staff, txtUsername.Text.Trim(), textBox5.Text.Trim());

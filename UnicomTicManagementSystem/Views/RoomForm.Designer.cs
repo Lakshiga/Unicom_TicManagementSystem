@@ -43,7 +43,7 @@
             // btnDelete
             // 
             this.btnDelete.Location = new System.Drawing.Point(97, 242);
-            this.btnDelete.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnDelete.Margin = new System.Windows.Forms.Padding(4);
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(100, 28);
             this.btnDelete.TabIndex = 0;
@@ -54,7 +54,7 @@
             // btnUpdate
             // 
             this.btnUpdate.Location = new System.Drawing.Point(219, 242);
-            this.btnUpdate.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnUpdate.Margin = new System.Windows.Forms.Padding(4);
             this.btnUpdate.Name = "btnUpdate";
             this.btnUpdate.Size = new System.Drawing.Size(100, 28);
             this.btnUpdate.TabIndex = 1;
@@ -65,7 +65,7 @@
             // btnAdd
             // 
             this.btnAdd.Location = new System.Drawing.Point(337, 242);
-            this.btnAdd.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnAdd.Margin = new System.Windows.Forms.Padding(4);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(100, 28);
             this.btnAdd.TabIndex = 2;
@@ -96,7 +96,7 @@
             // txtRoomName
             // 
             this.txtRoomName.Location = new System.Drawing.Point(292, 119);
-            this.txtRoomName.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtRoomName.Margin = new System.Windows.Forms.Padding(4);
             this.txtRoomName.Name = "txtRoomName";
             this.txtRoomName.Size = new System.Drawing.Size(132, 22);
             this.txtRoomName.TabIndex = 5;
@@ -104,7 +104,7 @@
             // txtRoomType
             // 
             this.txtRoomType.Location = new System.Drawing.Point(292, 185);
-            this.txtRoomType.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtRoomType.Margin = new System.Windows.Forms.Padding(4);
             this.txtRoomType.Name = "txtRoomType";
             this.txtRoomType.Size = new System.Drawing.Size(132, 22);
             this.txtRoomType.TabIndex = 6;
@@ -123,11 +123,11 @@
             // dgvRooms
             // 
             this.dgvRooms.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvRooms.Location = new System.Drawing.Point(97, 306);
-            this.dgvRooms.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.dgvRooms.Location = new System.Drawing.Point(76, 306);
+            this.dgvRooms.Margin = new System.Windows.Forms.Padding(4);
             this.dgvRooms.Name = "dgvRooms";
             this.dgvRooms.RowHeadersWidth = 51;
-            this.dgvRooms.Size = new System.Drawing.Size(340, 106);
+            this.dgvRooms.Size = new System.Drawing.Size(389, 106);
             this.dgvRooms.TabIndex = 8;
             this.dgvRooms.SelectionChanged += new System.EventHandler(this.dgvRooms_SelectionChanged);
             // 
@@ -146,7 +146,7 @@
             this.Controls.Add(this.btnUpdate);
             this.Controls.Add(this.btnDelete);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "RoomForm";
             this.Text = "RoomForm";
             ((System.ComponentModel.ISupportInitialize)(this.dgvRooms)).EndInit();

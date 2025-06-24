@@ -3,6 +3,8 @@ using System.Data;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnicomTicManagementSystem.Models;
+using System.Data.SQLite;
+using UnicomTicManagementSystem.Data;
 
 namespace UnicomTicManagementSystem.Controllers.Repositories
 {
@@ -184,41 +186,29 @@ namespace UnicomTicManagementSystem.Controllers.Repositories
             });
         }
 
-        public async Task<List<TimeTable>> GetTimetableBySectionAsync(string sectionName)
+
+        public async Task<DataTable> GetAllTimetableAsync()
         {
-            return await Task.Run(() =>
+            using (var conn = DbCon.GetConnection())
             {
-                var timetables = new List<TimeTable>();
+                string query = @"
+            SELECT 
+                Subject, 
+                TimeSlot, 
+                Room, 
+                Date 
+            FROM Timetable
+            ORDER BY Date ASC";
 
-                var sql = @"
-            SELECT tt.Subject, tt.TimeSlot, tt.Room, tt.Date
-            FROM Timetable tt
-            INNER JOIN Subjects s ON tt.Subject = s.SubjectName
-            INNER JOIN Sections sec ON s.SectionId = sec.Id
-            WHERE sec.Name = @SectionName
-            ORDER BY tt.Date, tt.TimeSlot";
-
-                var parameters = new Dictionary<string, object> { { "@SectionName", sectionName } };
-
-                using (var reader = ExecuteReader(sql, parameters))
+                using (var cmd = new SQLiteCommand(query, conn))
+                using (var adapter = new SQLiteDataAdapter(cmd))
                 {
-                    while (reader.Read())
-                    {
-                        timetables.Add(TimeTable.CreateTimeTable(
-                            reader["Subject"].ToString(),
-                            reader["TimeSlot"].ToString(),
-                            reader["Room"].ToString(),
-                            DateTime.Parse(reader["Date"].ToString())
-                        ));
-                    }
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+                    return dt;
                 }
-
-                return timetables;
-            });
+            }
         }
-
-
-
 
 
         public async Task<List<Mark>> GetExamMarksByUsernameAsync(string username)

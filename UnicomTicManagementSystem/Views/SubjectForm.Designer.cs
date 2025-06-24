@@ -45,7 +45,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(41, 138);
+            this.label1.Location = new System.Drawing.Point(91, 122);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(117, 16);
@@ -54,7 +54,7 @@
             // 
             // btnAdd
             // 
-            this.btnAdd.Location = new System.Drawing.Point(44, 221);
+            this.btnAdd.Location = new System.Drawing.Point(94, 205);
             this.btnAdd.Margin = new System.Windows.Forms.Padding(4);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(100, 28);
@@ -65,7 +65,7 @@
             // 
             // btn_update
             // 
-            this.btn_update.Location = new System.Drawing.Point(235, 221);
+            this.btn_update.Location = new System.Drawing.Point(261, 205);
             this.btn_update.Margin = new System.Windows.Forms.Padding(4);
             this.btn_update.Name = "btn_update";
             this.btn_update.Size = new System.Drawing.Size(100, 28);
@@ -77,7 +77,7 @@
             // btn_delete
             // 
             this.btn_delete.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btn_delete.Location = new System.Drawing.Point(422, 221);
+            this.btn_delete.Location = new System.Drawing.Point(415, 205);
             this.btn_delete.Margin = new System.Windows.Forms.Padding(4);
             this.btn_delete.Name = "btn_delete";
             this.btn_delete.Size = new System.Drawing.Size(100, 28);
@@ -88,7 +88,7 @@
             // 
             // btn_search
             // 
-            this.btn_search.Location = new System.Drawing.Point(44, 273);
+            this.btn_search.Location = new System.Drawing.Point(94, 257);
             this.btn_search.Margin = new System.Windows.Forms.Padding(4);
             this.btn_search.Name = "btn_search";
             this.btn_search.Size = new System.Drawing.Size(100, 28);
@@ -99,7 +99,7 @@
             // 
             // txtSubjectName
             // 
-            this.txtSubjectName.Location = new System.Drawing.Point(235, 132);
+            this.txtSubjectName.Location = new System.Drawing.Point(261, 116);
             this.txtSubjectName.Margin = new System.Windows.Forms.Padding(4);
             this.txtSubjectName.Name = "txtSubjectName";
             this.txtSubjectName.Size = new System.Drawing.Size(254, 22);
@@ -108,7 +108,7 @@
             // comboBoxSearchSection
             // 
             this.comboBoxSearchSection.FormattingEnabled = true;
-            this.comboBoxSearchSection.Location = new System.Drawing.Point(235, 276);
+            this.comboBoxSearchSection.Location = new System.Drawing.Point(267, 257);
             this.comboBoxSearchSection.Margin = new System.Windows.Forms.Padding(4);
             this.comboBoxSearchSection.Name = "comboBoxSearchSection";
             this.comboBoxSearchSection.Size = new System.Drawing.Size(248, 24);
@@ -118,11 +118,11 @@
             // dataGridView1
             // 
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(44, 309);
+            this.dataGridView1.Location = new System.Drawing.Point(73, 306);
             this.dataGridView1.Margin = new System.Windows.Forms.Padding(4);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersWidth = 51;
-            this.dataGridView1.Size = new System.Drawing.Size(625, 232);
+            this.dataGridView1.Size = new System.Drawing.Size(455, 197);
             this.dataGridView1.TabIndex = 7;
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             // 
@@ -130,7 +130,7 @@
             // 
             this.comboBoxSelectSection.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSelectSection.FormattingEnabled = true;
-            this.comboBoxSelectSection.Location = new System.Drawing.Point(235, 177);
+            this.comboBoxSelectSection.Location = new System.Drawing.Point(261, 161);
             this.comboBoxSelectSection.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.comboBoxSelectSection.Name = "comboBoxSelectSection";
             this.comboBoxSelectSection.Size = new System.Drawing.Size(254, 24);
@@ -140,7 +140,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(41, 185);
+            this.label2.Location = new System.Drawing.Point(91, 169);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(125, 16);
             this.label2.TabIndex = 9;

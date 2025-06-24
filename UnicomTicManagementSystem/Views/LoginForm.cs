@@ -49,6 +49,13 @@ namespace UnicomTicManagementSystem.Views
                     return;
                 }
 
+                // Simple password validation: at least 6 characters
+                if (password.Length < 6)
+                {
+                    MessageBox.Show("Password must be at least 6 characters long.", "Invalid Password", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
                 if (!await UserRepository.HasAnyUsersAsync())
                 {
                     // First-time admin registration

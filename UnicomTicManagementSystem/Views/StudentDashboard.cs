@@ -44,7 +44,7 @@ namespace UnicomTicManagementSystem.Views
         {
             if (student != null)
             {
-                dataGridView1.DataSource = await _studentRepository.GetTimetableBySectionAsync(sectionName);
+                dataGridView1.DataSource = await _studentRepository.GetAllTimetableAsync();
             }
         }
 

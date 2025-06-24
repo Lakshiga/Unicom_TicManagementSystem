@@ -153,6 +153,12 @@ namespace UnicomTicManagementSystem.Views
                     return;
                 }
 
+                if (password.Text.Length < 6)
+                {
+                    MessageBox.Show("Password must be at least 6 characters long.", "Invalid Password", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
                 var student = new Student
                 {
                     Name = name.Text,
@@ -181,6 +187,12 @@ namespace UnicomTicManagementSystem.Views
             if (_currentStudent == null)
             {
                 MessageBox.Show("Please select a student to update.", "No Student Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (password.Text.Length < 6)
+            {
+                MessageBox.Show("Password must be at least 6 characters long.", "Invalid Password", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 

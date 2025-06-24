@@ -31,11 +31,11 @@ namespace UnicomTicManagementSystem.Views
             comboExam.Items.Clear();
             var dt = await controller.GetExamsAsync();
 
-            MessageBox.Show($"Total Exams Loaded: {dt.Rows.Count}");
+            MessageBox.Show($"Exams found: {dt.Rows.Count}");
 
             foreach (DataRow row in dt.Rows)
             {
-                comboExam.Items.Add(row["Exam"].ToString());
+                comboExam.Items.Add(row["ExamName"].ToString());
             }
         }
 
@@ -103,20 +103,39 @@ namespace UnicomTicManagementSystem.Views
             }
         }
 
-        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        private async void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (userRole == "admin") return;
 
             if (e.RowIndex >= 0)
             {
                 DataGridViewRow row = dataGridView1.Rows[e.RowIndex];
-                selectedMarkId = Guid.TryParse(row.Cells["MarkID"].Value?.ToString(), out Guid markGuid) ? markGuid : Guid.Empty;
-                txtStudentID.Text = row.Cells["StudentID"].Value?.ToString();
+
+                // For debugging: show what is inside the StudentID cell
+                var studentIdCellValue = row.Cells["StudentID"].Value?.ToString();
+                if (!int.TryParse(studentIdCellValue, out int referenceId))
+                {
+                    MessageBox.Show($"Invalid Reference ID in selected row: '{studentIdCellValue}'");
+                    return;
+                }
+
+                // Continue as normal if valid int referenceId
+                selectedMarkId = Guid.TryParse(row.Cells["Id"].Value?.ToString(), out Guid markGuid) ? markGuid : Guid.Empty;
+
+                var (studentGuid, studentName) = await controller.GetStudentByReferenceIdAsync(referenceId);
+
+                studentGuidId = studentGuid;
+                txtStudentID.Text = referenceId.ToString();
+                txtStudentName.Text = studentName ?? "Unknown";
+
                 comboSubject.SelectedItem = row.Cells["Subject"].Value?.ToString();
                 comboExam.SelectedItem = row.Cells["Exam"].Value?.ToString();
                 txtScore.Text = row.Cells["Score"].Value?.ToString();
             }
         }
+
+
+
 
         private void ClearForm()
         {
@@ -138,7 +157,7 @@ namespace UnicomTicManagementSystem.Views
             }
 
             await controller.DeleteMarkAsync(selectedMarkId);
-            MessageBox.Show("Deleted.");
+            MessageBox.Show("Deleted Successfully !");
             await LoadMarksAsync();
             ClearForm();
         }
@@ -158,7 +177,7 @@ namespace UnicomTicManagementSystem.Views
             }
 
             await controller.UpdateMarkAsync(selectedMarkId, studentGuidId, comboSubject.SelectedItem.ToString(), comboExam.SelectedItem.ToString(), score);
-            MessageBox.Show("Updated.");
+            MessageBox.Show("Updated Successfully !");
             await LoadMarksAsync();
             ClearForm();
         }
@@ -171,8 +190,14 @@ namespace UnicomTicManagementSystem.Views
                 return;
             }
 
+            if (score < 0 || score > 100)
+            {
+                MessageBox.Show("Score must be between 0 and 100.");
+                return;
+            }
+
             await controller.AddMarkAsync(studentGuidId, comboSubject.SelectedItem.ToString(), comboExam.SelectedItem.ToString(), score);
-            MessageBox.Show("Mark added.");
+            MessageBox.Show("Mark added Successfully !");
             await LoadMarksAsync();
             ClearForm();
         }

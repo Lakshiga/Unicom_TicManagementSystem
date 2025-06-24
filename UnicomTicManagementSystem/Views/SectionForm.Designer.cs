@@ -44,17 +44,17 @@
             // 
             this.dgvSections.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvSections.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvSections.Location = new System.Drawing.Point(37, 219);
-            this.dgvSections.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.dgvSections.Location = new System.Drawing.Point(75, 289);
+            this.dgvSections.Margin = new System.Windows.Forms.Padding(4);
             this.dgvSections.Name = "dgvSections";
             this.dgvSections.RowHeadersWidth = 51;
-            this.dgvSections.Size = new System.Drawing.Size(638, 322);
+            this.dgvSections.Size = new System.Drawing.Size(544, 197);
             this.dgvSections.TabIndex = 24;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(63, 82);
+            this.label1.Location = new System.Drawing.Point(100, 85);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(114, 16);
@@ -63,24 +63,24 @@
             // 
             // secName
             // 
-            this.secName.Location = new System.Drawing.Point(201, 76);
-            this.secName.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.secName.Location = new System.Drawing.Point(263, 82);
+            this.secName.Margin = new System.Windows.Forms.Padding(4);
             this.secName.Name = "secName";
-            this.secName.Size = new System.Drawing.Size(417, 22);
+            this.secName.Size = new System.Drawing.Size(339, 22);
             this.secName.TabIndex = 17;
             // 
             // secSearch
             // 
-            this.secSearch.Location = new System.Drawing.Point(236, 180);
-            this.secSearch.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.secSearch.Location = new System.Drawing.Point(263, 230);
+            this.secSearch.Margin = new System.Windows.Forms.Padding(4);
             this.secSearch.Name = "secSearch";
             this.secSearch.Size = new System.Drawing.Size(339, 22);
             this.secSearch.TabIndex = 21;
             // 
             // add
             // 
-            this.add.Location = new System.Drawing.Point(489, 115);
-            this.add.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.add.Location = new System.Drawing.Point(489, 140);
+            this.add.Margin = new System.Windows.Forms.Padding(4);
             this.add.Name = "add";
             this.add.Size = new System.Drawing.Size(113, 41);
             this.add.TabIndex = 15;
@@ -89,8 +89,8 @@
             // 
             // update
             // 
-            this.update.Location = new System.Drawing.Point(272, 115);
-            this.update.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.update.Location = new System.Drawing.Point(272, 140);
+            this.update.Margin = new System.Windows.Forms.Padding(4);
             this.update.Name = "update";
             this.update.Size = new System.Drawing.Size(111, 39);
             this.update.TabIndex = 13;
@@ -100,8 +100,8 @@
             // 
             // search
             // 
-            this.search.Location = new System.Drawing.Point(65, 172);
-            this.search.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.search.Location = new System.Drawing.Point(101, 213);
+            this.search.Margin = new System.Windows.Forms.Padding(4);
             this.search.Name = "search";
             this.search.Size = new System.Drawing.Size(112, 39);
             this.search.TabIndex = 19;
@@ -110,8 +110,8 @@
             // 
             // delete
             // 
-            this.delete.Location = new System.Drawing.Point(64, 115);
-            this.delete.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.delete.Location = new System.Drawing.Point(101, 140);
+            this.delete.Margin = new System.Windows.Forms.Padding(4);
             this.delete.Name = "delete";
             this.delete.Size = new System.Drawing.Size(113, 39);
             this.delete.TabIndex = 11;
@@ -143,7 +143,7 @@
             this.Controls.Add(this.add);
             this.Controls.Add(this.update);
             this.Controls.Add(this.delete);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "SectionForm";
             this.Text = "SectionForm";
             ((System.ComponentModel.ISupportInitialize)(this.dgvSections)).EndInit();

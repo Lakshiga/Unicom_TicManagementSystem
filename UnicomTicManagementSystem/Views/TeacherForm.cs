@@ -56,6 +56,12 @@ namespace UnicomTicManagementSystem.Views
                 return;
             }
 
+            if (txtPassword.Text.Length < 6)
+            {
+                MessageBox.Show("Password must be at least 6 characters long.", "Invalid Password", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             if (await UserRepository.UserExistsAsync(txtUsername.Text))
             {
                 MessageBox.Show("Username already exists.");
@@ -90,6 +96,12 @@ namespace UnicomTicManagementSystem.Views
                 if (selectedTeacherId == Guid.Empty)
                 {
                     MessageBox.Show("Select a teacher to update.");
+                    return;
+                }
+
+                if (txtPassword.Text.Length < 6)
+                {
+                    MessageBox.Show("Password must be at least 6 characters long.", "Invalid Password", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 

@@ -3,6 +3,7 @@ using System.Data;
 using System.Data.SQLite;
 using System.Threading.Tasks;
 using UnicomTicManagementSystem.Data;
+using UnicomTicManagementSystem.Models;
 
 namespace UnicomTicManagementSystem.Repositories
 {
@@ -12,7 +13,18 @@ namespace UnicomTicManagementSystem.Repositories
         {
             using (var conn = DbCon.GetConnection())
             {
-                string query = "SELECT * FROM Marks";
+                string query = @"
+            SELECT
+                m.Id AS Id,
+                s.ReferenceId AS StudentID,
+                s.Name AS StudentName,
+                m.Subject,
+                m.Exam,
+                m.Score
+            FROM Marks m
+            JOIN Students s ON m.StudentID = s.Id
+        ";
+
                 using (var cmd = new SQLiteCommand(query, conn))
                 using (var adapter = new SQLiteDataAdapter(cmd))
                 {
@@ -22,6 +34,7 @@ namespace UnicomTicManagementSystem.Repositories
                 }
             }
         }
+
 
         public async Task AddMarkAsync(Guid studentGuid, string subject, string exam, int score)
         {
@@ -78,7 +91,7 @@ namespace UnicomTicManagementSystem.Repositories
         {
             using (var conn = DbCon.GetConnection())
             {
-                string query = "DELETE FROM Marks WHERE MarkID = @MarkID";
+                string query = "DELETE FROM Marks WHERE Id = @MarkID";
                 using (var cmd = new SQLiteCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@MarkID", markId.ToString());
@@ -94,42 +107,59 @@ namespace UnicomTicManagementSystem.Repositories
             {
                 string query = @"
             UPDATE Marks 
-            SET StudentId = @StudentId, Subject = @Subject, Exam = @Exam, Score = @Score, ModifiedDate = @ModifiedDate
-            WHERE MarkID = @MarkID";
+            SET 
+                StudentId = @StudentId, 
+                Subject = @Subject, 
+                Exam = @Exam, 
+                Score = @Score, 
+                ModifiedDate = @ModifiedDate
+            WHERE Id = @Id";
 
                 using (var cmd = new SQLiteCommand(query, conn))
                 {
-                    cmd.Parameters.AddWithValue("@MarkID", markId);
+                    // ✅ Ensure all parameters in the SQL have corresponding parameters in the command
                     cmd.Parameters.AddWithValue("@StudentId", studentGuid.ToString());
-                    cmd.Parameters.AddWithValue("@Subject", subject);
-                    cmd.Parameters.AddWithValue("@Exam", exam);
+                    cmd.Parameters.AddWithValue("@Subject", subject ?? string.Empty);
+                    cmd.Parameters.AddWithValue("@Exam", exam ?? string.Empty);
                     cmd.Parameters.AddWithValue("@Score", score);
                     cmd.Parameters.AddWithValue("@ModifiedDate", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+                    cmd.Parameters.AddWithValue("@Id", markId.ToString());
+
+                    // Debugging tip (optional): Uncomment to check values
+                    // Console.WriteLine($"Update SQL Params: StudentId={studentGuid}, Subject={subject}, Exam={exam}, Score={score}, Id={markId}");
 
                     await cmd.ExecuteNonQueryAsync();
                 }
             }
         }
 
+
+
         public async Task<(Guid studentGuid, string studentName)> GetStudentByReferenceIdAsync(int referenceId)
         {
-            using (var conn = DbCon.GetConnection())  // connection already opened here
+            using (var conn = DbCon.GetConnection())
             {
-                string query = "SELECT Id, Name FROM Students WHERE ReferenceId = @ReferenceId";
-                using (var cmd = new SQLiteCommand(query, conn))
+                using (var cmd = new SQLiteCommand("SELECT * FROM Students WHERE ReferenceId = @refId", conn))
                 {
-                    cmd.Parameters.AddWithValue("@ReferenceId", referenceId);
+                    cmd.Parameters.AddWithValue("@refId", referenceId);
+
                     using (var reader = await cmd.ExecuteReaderAsync())
                     {
                         if (await reader.ReadAsync())
                         {
-                            return (Guid.Parse(reader["Id"].ToString()), reader["Name"].ToString());
+                            Guid id = Guid.Parse(reader["Id"].ToString());
+                            string name = reader["Name"].ToString();
+
+                            return (id, name);
                         }
                     }
                 }
             }
+
             return (Guid.Empty, null);
         }
+
+
 
 
         public async Task<string> GetStudentNameAsync(int studentId)
@@ -174,7 +204,7 @@ namespace UnicomTicManagementSystem.Repositories
         {
             using (var conn = DbCon.GetConnection())
             {
-                string query = "SELECT DISTINCT Exam FROM Marks"; // or use Exams table if you have it
+                string query = "SELECT ExamName FROM ManageExam ORDER BY CreatedDate DESC";
 
                 using (var cmd = new SQLiteCommand(query, conn))
                 {
@@ -187,6 +217,5 @@ namespace UnicomTicManagementSystem.Repositories
                 }
             }
         }
-
     }
 }
